@@ -18,17 +18,12 @@ wss.on('connection', ws => {
 
   ws.on('message', msg => {
     const data = JSON.parse(msg);
-    if (data.type === 'move') {
-      players[id].pos = data.pos;
+
+if (data.type === 'chat') {
+  wss.clients.forEach(c => {
+    if (c.readyState === 1) {
+      c.send(JSON.stringify(data));
     }
   });
-
-  ws.on('close', () => delete players[id]);
-});
-
-setInterval(() => {
-  const state = JSON.stringify({ type: 'state', players });
-  wss.clients.forEach(c => {
-    if (c.readyState === 1) c.send(state);
-  });
-}, 50);
+        }
+    
